@@ -4,6 +4,7 @@ import App from './App.jsx'
 
 import { unstableSetRender } from 'antd';
 import { createRoot } from 'react-dom/client';
+import {BrowserRouter} from "react-router-dom";
 
 // ant design 엔서 리액트 19버전이랑 안맞아서 추가 해야 되는 부분
 unstableSetRender((node, container) => {
@@ -17,5 +18,7 @@ unstableSetRender((node, container) => {
 });
 
 createRoot(document.getElementById('root')).render(
-    <App />
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
 )

@@ -1,26 +1,34 @@
 import React, {useEffect, useState} from 'react';
-import {fetchRevies} from "../../api/supadb.js";
-import {Button, Card, Form, Input, Rate, Typography} from "antd";
+import {fetchRevies, postReview} from "../../api/supadb.js";
+import {Button, Card, Form, Input, message, Rate, Typography} from "antd";
 import {EnvironmentOutlined, UserOutlined} from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea.js";
 
-function Reviews({city}) {
+function Reviews({city, aqi}) {
     const [form] = Form.useForm();
     const [reviews, setReviews] = useState([]);
 
-    useEffect(() => {
-        // city가 유효한 경우에만 fetch
+    const loadReviews = () => {
         if (city && city.id) {
             fetchRevies(city.id).then((data) => {
                 setReviews(data);
                 console.log(data);
             });
         }
+    }
+    useEffect(() => {
+        loadReviews();
     }, [city]);
 
-    const handleSubmit = (values) => {
-        console.log('handleSubmit');
-        console.log(values);
+    const handleSubmit = async (values) => {
+        values.city_id = city.id;
+        values.air_quality_index = aqi;
+        const ret = await postReview(values);
+        if (ret === 'success') {
+            message.success("성공적으로 저장하였습니다.");
+        } else {
+            message.error('저장 실패');
+        }
     };
 
     if (!city || city.length === 0) {
@@ -51,7 +59,7 @@ function Reviews({city}) {
                     layout="vertical"
                 >
                     <Form.Item
-                        name="userName"
+                        name="user_name"
                         label="이름"
                         rules={[{required: true, message: "이름을 입력하세요"}]}
                     >

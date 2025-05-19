@@ -22,3 +22,24 @@ export const fetchRevies = async (cityId) => {
         return [];
     }
 }
+
+export const postReview = async (obj) => {
+    console.log(obj);
+    try {
+        const {data, error} = await supabase
+            .from('reviews')
+            .insert([
+                {
+                    city_id: obj.city_id,
+                    user_name: obj.user_name,
+                    rating : obj.rating,
+                    comment : obj.comment,
+                    air_quality_index: obj.air_quality_index,
+                }
+            ])
+        return 'success';
+    } catch (err) {
+        console.log(err);
+        return 'fail';
+    }
+}
